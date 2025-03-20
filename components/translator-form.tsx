@@ -27,13 +27,15 @@ const languages = [
   { code: "ja", name: "Japanese" },
   { code: "ko", name: "Korean" },
 ] */
+
 const languages = [
-    { code: "en", name: "Inglês" },
-    { code: "es", name: "Espanhol" },
-    { code: "fr", name: "Francês" },
-    { code: "de", name: "Alemão" },
-    { code: "ca", name: "Catalão" },
-    { code: "pt", name: "Português"},
+  { code: "Inglês", name: "English" },
+  { code: "Espanhol", name: "Spanish" },
+  { code: "Francês", name: "French" },
+  { code: "Alemão", name: "German" },
+  { code: "Catalão", name: "Catalan" },
+  { code: "Português", name: "Portuguese" },
+  { code: "Polish", name: "Polish"},
 ]
 
 export function TranslatorForm() {
@@ -55,11 +57,11 @@ export function TranslatorForm() {
     setIsTranslating(true)
     setTranslatedFiles([])
     setDownloadError(null)
-
+    
     const formData = new FormData()
     formData.append("file", file)
-    formData.append("lang_in", languages.find(lang => lang.code === sourceLanguage)?.name || "")
-    formData.append("lang_out", languages.find(lang => lang.code === targetLanguage)?.name || "")
+    formData.append("lang_in", sourceLanguage) // Send code (e.g., "Inglês")
+    formData.append("lang_out", targetLanguage) // Send code (e.g., "Espanhol")
 
     try {
       const response = await fetch("https://api.doc-translate.com/translate", {

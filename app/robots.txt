@@ -1,0 +1,6 @@
+User-Agent: *
+Allow: /
+Disallow: /
+Crawl-Delay: 10
+
+Sitemap: https://doc-translate.com/sitemap.xml

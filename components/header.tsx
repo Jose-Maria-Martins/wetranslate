@@ -11,7 +11,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full">
       <div className="container flex h-[4.5rem] items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center space-x-2 ml-2 md:ml-4">
-          <span className="text-2xl font-bold">we(translate)</span>
+          <span className="text-2xl font-bold">doc-translate</span>
         </Link>
         <div className="flex items-center gap-4">
           <nav className="hidden rounded-full bg-white/95 px-6 py-2.5 shadow-sm md:flex md:items-center md:gap-8">
