@@ -1,16 +1,32 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Upload, Languages, ArrowRight, Download } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import { tr } from "date-fns/locale"
 
 interface TranslatedFile {
   name: string
   url: string
 }
+/*
+const languages = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Spanish" },
+  { code: "fr", name: "French" },
+  { code: "de", name: "German" },
+  { code: "it", name: "Italian" },
+  { code: "pt", name: "Portuguese" },
+  { code: "ru", name: "Russian" },
+  { code: "zh", name: "Chinese" },
+  { code: "ja", name: "Japanese" },
+  { code: "ko", name: "Korean" },
+] */
 
 const languages = [
   { code: "Inglês", name: "English" },
@@ -22,12 +38,7 @@ const languages = [
   { code: "Polish", name: "Polish"},
 ]
 
-interface TranslatorFormProps {
-  preSelectedFrom?: string;
-  preSelectedTo?: string;
-}
-
-export function TranslatorForm({ preSelectedFrom, preSelectedTo }: TranslatorFormProps) {
+export function TranslatorForm() {
   const [sourceLanguage, setSourceLanguage] = useState("")
   const [targetLanguage, setTargetLanguage] = useState("")
   const [file, setFile] = useState<File | null>(null)
@@ -35,24 +46,13 @@ export function TranslatorForm({ preSelectedFrom, preSelectedTo }: TranslatorFor
   const [isTranslating, setIsTranslating] = useState(false)
   const [downloadError, setDownloadError] = useState<string | null>(null)
 
-  // Initialize with pre-selected languages if provided
-  useEffect(() => {
-    if (preSelectedFrom) {
-      setSourceLanguage(preSelectedFrom)
-    }
-    if (preSelectedTo) {
-      setTargetLanguage(preSelectedTo)
-    }
-  }, [preSelectedFrom, preSelectedTo])
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0])
     }
   }
 
-  const handleTranslate = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+  const handleTranslate = async () => {
     if (!file || !sourceLanguage || !targetLanguage) return;
     setIsTranslating(true)
     setTranslatedFiles([])
@@ -81,6 +81,30 @@ export function TranslatorForm({ preSelectedFrom, preSelectedTo }: TranslatorFor
       setDownloadError("Translation failed. Please try again.")
     } finally {
       setIsTranslating(false)
+    }
+  }
+
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      setDownloadError(null)
+      const response = await fetch(url)
+      
+      if (!response.ok) {
+        throw new Error('Download failed')
+      }
+      
+      const blob = await response.blob()
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.download = `${filename}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(downloadUrl)
+    } catch (error) {
+      console.error("Download failed:", error)
+      setDownloadError("Failed to download the file. Please try again.")
     }
   }
 
@@ -187,8 +211,7 @@ export function TranslatorForm({ preSelectedFrom, preSelectedTo }: TranslatorFor
         </CardContent>
       </Card>
     )}
-    {downloadError && (
-      <div className="text-red-500 text-sm">{downloadError}</div>
-    )}
   </div>
 )}
+      
+
