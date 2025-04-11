@@ -47,7 +47,7 @@ const generateFAQs = (from: string, to: string) => {
 }
 
 // Generate metadata for each dynamic page
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const [from, to] = params.slug.split('-');
   
   const fromDisplayName = languageDisplayNames[from as keyof typeof languageDisplayNames];
@@ -71,20 +71,20 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-
 // Check if a language pair is valid
 function isValidLanguagePair(from: string, to: string) {
-  const fromCode = validLanguages[from as keyof typeof validLanguages]
-  const toCode = validLanguages[to as keyof typeof validLanguages]
+  const fromCode = validLanguages[from as keyof typeof validLanguages];
+  const toCode = validLanguages[to as keyof typeof validLanguages];
   
   // Check if languages exist and aren't the same
-  return fromCode && toCode && from !== to
+  return fromCode && toCode && from !== to;
 }
 
 // Generate static paths for all valid language combinations
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const pairs = [];
   const languages = Object.keys(validLanguages);
+  
   for (const from of languages) {
     for (const to of languages) {
       if (from !== to) {
@@ -96,11 +96,16 @@ export async function generateStaticParams() {
   return pairs;
 }
 
-
 export default function TranslatePage({ params }: { params: { slug: string } }) {
-  const [from, to] = params.slug.split('-') || [];
+  // Handle case where slug doesn't contain a hyphen
+  if (!params.slug.includes('-')) {
+    notFound();
+  }
+  
+  const [from, to] = params.slug.split('-');
 
-  if (!isValidLanguagePair(from, to)) {
+  // Check if both language parts exist and are valid
+  if (!from || !to || !isValidLanguagePair(from, to)) {
     notFound();
   }
   
