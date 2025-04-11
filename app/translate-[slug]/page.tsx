@@ -47,30 +47,30 @@ const generateFAQs = (from: string, to: string) => {
 }
 
 // Generate metadata for each dynamic page
-export async function generateMetadata({ params }: { params: { from: string, to: string } }): Promise<Metadata> {
-  const from = params.from.toLowerCase()
-  const to = params.to.toLowerCase()
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const [from, to] = params.slug.split('-');
   
-  const fromDisplayName = languageDisplayNames[from as keyof typeof languageDisplayNames]
-  const toDisplayName = languageDisplayNames[to as keyof typeof languageDisplayNames]
+  const fromDisplayName = languageDisplayNames[from as keyof typeof languageDisplayNames];
+  const toDisplayName = languageDisplayNames[to as keyof typeof languageDisplayNames];
   
   if (!fromDisplayName || !toDisplayName) {
     return {
       title: "Translation Service | Professional Document Translation",
       description: "Fast, accurate, and secure document translation service."
-    }
+    };
   }
 
   return {
-    title: `Translate ${fromDisplayName} to ${toDisplayName} | AI-Powered Translation`,
+    title: `Translate ${fromDisplayName} to ${toDisplayName} | doc-translate.com`,
     description: `Instantly translate ${fromDisplayName} to ${toDisplayName}. Upload your document for a fast and accurate professional-grade translation.`,
     openGraph: {
       title: `${fromDisplayName} to ${toDisplayName} Translation Service`,
       description: `Professional PDF translation from ${fromDisplayName} to ${toDisplayName}. Fast, accurate, and secure.`,
-      type: 'website',
+      type: 'website'
     }
-  }
+  };
 }
+
 
 // Check if a language pair is valid
 function isValidLanguagePair(from: string, to: string) {
@@ -83,36 +83,33 @@ function isValidLanguagePair(from: string, to: string) {
 
 // Generate static paths for all valid language combinations
 export async function generateStaticParams() {
-  const pairs = []
-  const languages = Object.keys(validLanguages)
-  
+  const pairs = [];
+  const languages = Object.keys(validLanguages);
   for (const from of languages) {
     for (const to of languages) {
       if (from !== to) {
-        pairs.push({ from, to })
+        pairs.push({ slug: `${from}-${to}` });
       }
     }
   }
   
-  return pairs
+  return pairs;
 }
 
-export default function TranslatePage({ params }: { params: { from: string, to: string } }) {
-  const from = params.from.toLowerCase()
-  const to = params.to.toLowerCase()
-  
-  // Redirect to 404 if invalid language pair
+
+export default function TranslatePage({ params }: { params: { slug: string } }) {
+  const [from, to] = params.slug.split('-') || [];
+
   if (!isValidLanguagePair(from, to)) {
-    notFound()
+    notFound();
   }
   
-  const fromCode = validLanguages[from as keyof typeof validLanguages]
-  const toCode = validLanguages[to as keyof typeof validLanguages]
-  const fromDisplayName = languageDisplayNames[from as keyof typeof languageDisplayNames]
-  const toDisplayName = languageDisplayNames[to as keyof typeof languageDisplayNames]
+  const fromCode = validLanguages[from as keyof typeof validLanguages];
+  const toCode = validLanguages[to as keyof typeof validLanguages];
+  const fromDisplayName = languageDisplayNames[from as keyof typeof languageDisplayNames];
+  const toDisplayName = languageDisplayNames[to as keyof typeof languageDisplayNames];
   
-  // Generate FAQs for this language pair
-  const faqs = generateFAQs(fromDisplayName, toDisplayName)
+  const faqs = generateFAQs(fromDisplayName, toDisplayName);
 
   return (
     <main className="container flex min-h-[calc(100vh-4.5rem)] flex-col items-center py-8 px-4 md:px-6 lg:py-12">
@@ -132,7 +129,9 @@ export default function TranslatePage({ params }: { params: { from: string, to: 
       
       {/* FAQ Section */}
       <div className="w-full max-w-6xl mt-16">
-        <h2 className="text-2xl font-bold mb-8 text-center">Frequently Asked Questions about {fromDisplayName} to {toDisplayName} Translation</h2>
+        <h2 className="text-2xl font-bold mb-8 text-center">
+          Frequently Asked Questions about {fromDisplayName} to {toDisplayName} Translation
+        </h2>
         <div className="space-y-6">
           {faqs.map((faq, index) => (
             <div key={index} className="bg-card/50 p-6 rounded-lg shadow-sm">
@@ -181,5 +180,5 @@ export default function TranslatePage({ params }: { params: { from: string, to: 
         }}
       />
     </main>
-  )
+  );
 }

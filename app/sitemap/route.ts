@@ -39,7 +39,7 @@ export async function GET() {
       if (fromLang === toLang) continue;
       
       translationPages.push({
-        loc: `${baseUrl}/translate/${fromLang}/${toLang}`,
+        loc: `${baseUrl}/translate-${fromLang}-${toLang}`,
         lastmod: new Date().toISOString(),
         changefreq: 'weekly',
         priority: 0.9,

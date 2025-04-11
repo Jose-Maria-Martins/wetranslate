@@ -33,7 +33,7 @@ export default function HomePage() {
           {popularPairs.map((pair, index) => (
             <Link 
               key={index} 
-              href={`/translate/${pair.from}/${pair.to}`}
+              href={`/translate-${pair.from}-${pair.to}`}
               className="bg-card/50 p-4 rounded-lg shadow-sm text-center hover:bg-card/70 transition-colors"
             >
               <div className="font-medium">
