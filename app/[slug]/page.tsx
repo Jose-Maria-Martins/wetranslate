@@ -48,8 +48,19 @@ const generateFAQs = (from: string, to: string) => {
 
 // Generate metadata for each dynamic page
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const [from, to] = params.slug.split('-');
-  
+  // Check if it's a translation page first
+  if (!params.slug.startsWith('translate-')) {
+    // Return default metadata for non-translation pages
+    return {
+      title: "Doc Translate | Professional Document Translation",
+      description: "Fast, accurate, and secure document translation service."
+    };
+  }
+
+  // Remove the 'translate-' prefix and split
+  const languagePair = params.slug.replace('translate-', '');
+  const [from, to] = languagePair.split('-');
+
   const fromDisplayName = languageDisplayNames[from as keyof typeof languageDisplayNames];
   const toDisplayName = languageDisplayNames[to as keyof typeof languageDisplayNames];
   
@@ -88,21 +99,45 @@ export function generateStaticParams() {
   for (const from of languages) {
     for (const to of languages) {
       if (from !== to) {
-        pairs.push({ slug: `${from}-${to}` });
+        pairs.push({ slug: `translate-${from}-${to}` });
       }
     }
   }
   
+  // Add any other required static routes here
+  // For example, if you have an "about" page
+  pairs.push({ slug: 'about' });
+  
   return pairs;
 }
 
-export default function TranslatePage({ params }: { params: { slug: string } }) {
-  // Handle case where slug doesn't contain a hyphen
-  if (!params.slug.includes('-')) {
+export default function DynamicPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  
+  // Check if this is a translation page
+  if (!slug.startsWith('translate-')) {
+    // Return 404 for any non-translate pages not handled elsewhere
+    // You can also check for specific slugs like 'about' here
+    if (slug === 'about') {
+      notFound(); // Let your existing about page handle this
+    }
+    
+    return (
+      <main className="container flex min-h-[calc(100vh-4.5rem)] flex-col items-center py-8 px-4 md:px-6 lg:py-12">
+        <h1>Page not found</h1>
+      </main>
+    );
+  }
+  
+  // Handle translation pages
+  const languagePair = slug.replace('translate-', '');
+  
+  // Handle case where slug doesn't contain a hyphen after 'translate-'
+  if (!languagePair.includes('-')) {
     notFound();
   }
   
-  const [from, to] = params.slug.split('-');
+  const [from, to] = languagePair.split('-');
 
   // Check if both language parts exist and are valid
   if (!from || !to || !isValidLanguagePair(from, to)) {
