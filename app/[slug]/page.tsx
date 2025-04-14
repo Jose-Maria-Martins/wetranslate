@@ -52,7 +52,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!params.slug.startsWith('translate-')) {
     // Return default metadata for non-translation pages
     return {
-      title: "Doc Translate | Professional Document Translation",
+      title: "Doc-Translate.com | Professional Document Translation",
       description: "Fast, accurate, and secure document translation service."
     };
   }

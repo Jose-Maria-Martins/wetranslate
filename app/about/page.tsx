@@ -3,12 +3,12 @@ import Link from "next/link"
 import { CheckCircle2, Globe, FileText, Shield, Clock, Award, UserCheck, Mail, Star, ArrowRight, Zap, Sparkles } from "lucide-react"
 
 export const metadata = {
-  title: "About PDF Translator - Professional Document Translation Services",
+  title: "About Doc-translate.com - Professional Document Translation Services",
   description:
     "Transform your documents into any language while maintaining perfect formatting. Fast, accurate, and secure business document translation service.",
   keywords: "pdf translator, document translation service, professional translation, secure translation, document translation service, document translation with formatting, multilingual document translation",
   openGraph: {
-    title: "About PDF Translator - Professional Document Translation Services",
+    title: "About Doc-translate.com - Professional Document Translation Services",
     description: "Transform your documents into any language while maintaining perfect formatting. Fast, accurate, and secure business document translation service.",
     type: "website",
     locale: "en_US",
