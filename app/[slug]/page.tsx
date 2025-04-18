@@ -78,7 +78,10 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       title: `${fromDisplayName} to ${toDisplayName} Translation Service`,
       description: `Professional PDF translation from ${fromDisplayName} to ${toDisplayName}. Fast, accurate, and secure.`,
       type: 'website'
-    }
+    },
+    alternates: {
+      canonical: `https://doc-translate.com/${params.slug}`,
+    },
   };
 }
 
